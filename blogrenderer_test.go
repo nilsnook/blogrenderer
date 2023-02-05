@@ -43,7 +43,8 @@ func TestRenderer(t *testing.T) {
 		}
 
 		got := buf.String()
-		want := `<ol><li><a href="/post/untitled-player">Untitled Player</a></li><li><a href="/post/little-sunshine">Little Sunshine</a></li></ol>`
+		want := `<ol><li><a href="/post/untitled-player">Untitled Player</a></li><li><a href="/post/little-sunshine">Little Sunshine</a></li></ol>
+`
 
 		if got != want {
 			t.Errorf("got %q, want %q", got, want)

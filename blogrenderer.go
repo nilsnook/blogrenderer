@@ -37,25 +37,11 @@ func NewPostRenderer() (*PostRenderer, error) {
 }
 
 func (r *PostRenderer) Render(w io.Writer, p Post) error {
-	if err := r.tmpl.Execute(w, p); err != nil {
-		return err
-	}
-	return nil
+	return r.tmpl.ExecuteTemplate(w, "blog.gohtml", p)
 }
 
 func (r *PostRenderer) RenderIndex(w io.Writer, posts []Post) error {
-	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{.SanitisedTitle}}">{{.Title}}</a></li>{{end}}</ol>`
-
-	tmpl, err := template.New("index").Parse(indexTemplate)
-	if err != nil {
-		return err
-	}
-
-	if err := tmpl.Execute(w, posts); err != nil {
-		return err
-	}
-
-	return nil
+	return r.tmpl.ExecuteTemplate(w, "index.gohtml", posts)
 }
 
 // type PostViewModel struct {
