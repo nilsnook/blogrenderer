@@ -19,6 +19,10 @@ type Post struct {
 	Body        string
 }
 
+func (p Post) SanitisedTitle() string {
+	return strings.ToLower(strings.Replace(p.Title, " ", "-", -1))
+}
+
 type PostRenderer struct {
 	tmpl *template.Template
 }
@@ -40,13 +44,9 @@ func (r *PostRenderer) Render(w io.Writer, p Post) error {
 }
 
 func (r *PostRenderer) RenderIndex(w io.Writer, posts []Post) error {
-	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{sanitiseTitle .Title}}">{{.Title}}</a></li>{{end}}</ol>`
+	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{.SanitisedTitle}}">{{.Title}}</a></li>{{end}}</ol>`
 
-	tmpl, err := template.New("index").Funcs(template.FuncMap{
-		"sanitiseTitle": func(title string) string {
-			return strings.ToLower(strings.Replace(title, " ", "-", -1))
-		},
-	}).Parse(indexTemplate)
+	tmpl, err := template.New("index").Parse(indexTemplate)
 	if err != nil {
 		return err
 	}
@@ -57,6 +57,14 @@ func (r *PostRenderer) RenderIndex(w io.Writer, posts []Post) error {
 
 	return nil
 }
+
+// type PostViewModel struct {
+// 	Title          string
+// 	SanitisedTitle string
+// 	Description    string
+// 	Tags           []string
+// 	Body           string
+// }
 
 // func Render(w io.Writer, p Post) error {
 // 	// tmpl, err := template.New("blog").Parse(postTemplate)
